@@ -18,7 +18,7 @@ class Item(Base):
 
 
 class TFModel(Base):
-    name = Column(String(64),unique=True)
+    name = Column(String(64), primary_key=True, index=True)
     type = Column(String(32), nullable=False)
     version = Column(Integer, default=-1, nullable=True)
     inputs_metadata = Column(JSON, nullable=True)
