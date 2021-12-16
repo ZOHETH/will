@@ -1,0 +1,23 @@
+version: '3.7'
+
+services:
+  db:
+    env_file: docker/.env
+    image: postgres:10
+    container_name: will_db
+    restart: unless-stopped
+    ports:
+      - 11451:5432
+    volumes:
+      - db_home:/var/lib/postgresql/data
+  app:
+    build: .
+    restart: on-failure
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: "postgresql://postgres:postgres@db/postgres"
+    env_file:
+      - .env
+    depends_on:
+      - db
