@@ -1,3 +1,4 @@
+x-will-image: &will-image registry.cn-beijing.aliyuncs.com/kezhiyin/will
 version: '3.7'
 
 services:
@@ -15,15 +16,13 @@ services:
     image: dpage/pgadmin4
     depends_on:
       - db
-    env_file:
-      - .env
+    env_file: docker/.env
   app:
-    build: .
+    image: *will-image 
     restart: on-failure
     ports:
       - "8000:8000"
-    env_file:
-      - .env
+    env_file: docker/.env
     depends_on:
       - db
 

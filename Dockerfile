@@ -3,7 +3,7 @@ FROM tiangolo/uvicorn-gunicorn-fastapi:python3.8
 # 替换pip国内源
 RUN pip install -i https://pypi.douban.com/simple pip -U \
     && pip config set global.index-url https://pypi.douban.com/simple \
-    && pip config set global.trusted-host pypi.douban.com \
+    && pip config set global.trusted-host pypi.douban.com
 
 # For development, Jupyter remote kernel, Hydrogen
 # Using inside the container:
@@ -12,4 +12,6 @@ ARG INSTALL_JUPYTER=false
 RUN bash -c "if [ $INSTALL_JUPYTER == 'true' ] ; then pip install jupyterlab ; fi"
 
 COPY . /app
+RUN cd /app \
+    && pip install -r requirements.txt
 ENV PYTHONPATH=/app
