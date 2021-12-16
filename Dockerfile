@@ -1,30 +1,15 @@
-FROM python:3.8.12
-
-ENV LANG=C.UTF-8 \
-    LC_ALL=C.UTF-8 \
-    WILL_HOME="/app/will_home"
-
-RUN mkdir /app \
-        && apt-get update -y \
-        && apt-get install -y --no-install-recommends \
-            libpq-dev \
-            libsasl2-dev \
-            libecpg-dev \
-            vim \
-        && rm -rf /var/lib/apt/lists/* \
-
+FROM tiangolo/uvicorn-gunicorn-fastapi:python3.8
 
 # 替换pip国内源
 RUN pip install -i https://pypi.douban.com/simple pip -U \
     && pip config set global.index-url https://pypi.douban.com/simple \
     && pip config set global.trusted-host pypi.douban.com \
 
+# For development, Jupyter remote kernel, Hydrogen
+# Using inside the container:
+# jupyter lab --ip=0.0.0.0 --allow-root --NotebookApp.custom_display_url=http://127.0.0.1:8888
+ARG INSTALL_JUPYTER=false
+RUN bash -c "if [ $INSTALL_JUPYTER == 'true' ] ; then pip install jupyterlab ; fi"
 
-COPY ./requirements.txt  /app/requirements.txt
-
-RUN cd /app \
-    && pip install -r requirements.txt
-
-WORKDIR /app
-ADD ./docker /app/docker
-ADD ./will /app/will
+COPY . /app
+ENV PYTHONPATH=/app

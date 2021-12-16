@@ -3,21 +3,34 @@ version: '3.7'
 services:
   db:
     env_file: docker/.env
-    image: postgres:10
+    image: postgres:12
     container_name: will_db
     restart: unless-stopped
     ports:
       - 11451:5432
     volumes:
       - db_home:/var/lib/postgresql/data
+
+  pgadmin:
+    image: dpage/pgadmin4
+    depends_on:
+      - db
+    env_file:
+      - .env
   app:
     build: .
     restart: on-failure
     ports:
       - "8000:8000"
-    environment:
-      DATABASE_URL: "postgresql://postgres:postgres@db/postgres"
     env_file:
       - .env
     depends_on:
       - db
+
+volumes:
+  will_home:
+    external: false
+  db_home:
+    external: false
+  redis:
+    external: false
