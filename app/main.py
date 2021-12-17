@@ -1,15 +1,27 @@
 from typing import List
+import logging
 
 from fastapi import Depends, FastAPI, HTTPException
+from starlette.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 
 from . import crud, models, schemas
 from app.db.session import SessionLocal, engine
+from app.config import settings
 
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
+# # Set all CORS enabled origins
+# if settings.BACKEND_CORS_ORIGINS:
+#     app.add_middleware(
+#         CORSMiddleware,
+#         allow_origins=[str(origin) for origin in settings.BACKEND_CORS_ORIGINS],
+#         allow_credentials=True,
+#         allow_methods=["*"],
+#         allow_headers=["*"],
+#     )
 
 # Dependency
 def get_db():

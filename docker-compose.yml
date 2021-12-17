@@ -14,6 +14,8 @@ services:
 
   pgadmin:
     image: dpage/pgadmin4
+    ports:
+      - "11452:80"
     depends_on:
       - db
     env_file: docker/.env
@@ -21,10 +23,12 @@ services:
     image: *will-image 
     restart: on-failure
     ports:
-      - "8000:8000"
+      - "11450:80"
     env_file: docker/.env
     depends_on:
       - db
+    volumes:
+      - ./app:/app/app
 
 volumes:
   will_home:
